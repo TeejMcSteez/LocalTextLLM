@@ -3,9 +3,11 @@ document.addEventListener('DOMContentLoaded', () => {
     const messageInput = document.getElementById('message');
     const sendButton = document.getElementById('send');
     const loadingDiv = document.getElementById('loading');
+    const paramSelect = document.getElementById('paramSelect');
 
     async function sendMessage() {
         const message = messageInput.value.trim();
+        const selectedParam = paramSelect.value;
         if (!message){
             alert('No message to send');
             return;
@@ -25,7 +27,7 @@ document.addEventListener('DOMContentLoaded', () => {
             messageInput.disabled = true;
             sendButton.disabled = true;
 
-            const response = await fetch('http://localhost:3000/API/chat', {
+            const response = await fetch(`http://localhost:3000/API/chat${selectedParam}`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -38,10 +40,16 @@ document.addEventListener('DOMContentLoaded', () => {
             // Hide loading indicator
             loadingDiv.style.display = 'none';
             
-            // Add bot response with Markdown and MathJax support
+            // Add bot response with Markdown and KaTeX support
             const botDiv = document.createElement('div');
-            const renderedMessage = marked.parse(data.message);
-            botDiv.innerHTML = `<p><strong>Bot:</strong> ${renderedMessage}</p>`;
+            if (window.markdownit && window.markdownitKatex) {
+                const md = window.markdownit().use(window.markdownitKatex);
+                const renderedMessage = md.render(data.message);
+                botDiv.innerHTML = `<p><strong>Bot:</strong> ${renderedMessage}</p>`;
+            } else {
+                botDiv.innerHTML = `<p><strong>Bot:</strong> ${data.message}</p>`;
+                console.error('Markdown-it or markdown-it-katex is not loaded');
+            }
             chatDiv.appendChild(botDiv);
             
             // Trigger MathJax to process new content

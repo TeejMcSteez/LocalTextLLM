@@ -1,17 +1,27 @@
 {
+  "name": "r1chat",
+  "version": "1.0.1",
+  "description": "Just another AI Chat Bot",
+  "keywords": [],
+  "homepage": "https://github.com/TeejMcSteez/LocalTextLLM#readme",
+  "bugs": {
+    "url": "https://github.com/TeejMcSteez/LocalTextLLM/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/TeejMcSteez/LocalTextLLM.git"
+  },
+  "license": "ISC",
+  "author": "TeejMcSteez",
+  "type": "commonjs",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js"
+  },
   "dependencies": {
     "cors": "^2.8.5",
     "express": "^4.21.2",
     "ollama": "^0.5.12"
   },
-  "name": "chat",
-  "version": "1.0.0",
-  "main": "index.js",
-  "scripts": {
-    "start": "node index.js"
-  },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "description": ""
+  "devDependencies": {}
 }

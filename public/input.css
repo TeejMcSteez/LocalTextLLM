@@ -73,6 +73,20 @@ h1:after {
     border-radius: 4px;
 
 }
+#newChat {
+    padding: 10px;
+    margin: 5px;
+    background-color: #882615;
+    color: white;
+    border-radius: 4px;
+}
+#loadChat {
+    padding: 10px;
+    margin: 5px;
+    background-color: #882615;
+    color: white;
+    border-radius: 4px;
+}
 input {
     width: 80%;
     padding: 10px;

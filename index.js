@@ -138,6 +138,16 @@ app.post('/API/chat32b', async (req, res) => {
     }
 });
 
+// 404 Handler
+app.use((req, res) => {
+    res.status(404).json({"message": "file not found"});
+})
+
+// 500 Handler
+app.use((req, res) => {
+    res.status(500).json({"message": "an error occured on the server"});
+})
+
 app.listen(3000, () => {
     console.log('Server is running on port 3000');
 });

@@ -2,31 +2,54 @@ const { Ollama } = require('ollama');
 const path = require('node:path');
 const server = require('express');
 const cors = require('cors');
+const redis = require('redis');
 const app = server();
 
+// Initialize Redis client
+const redisClient = redis.createClient();
+redisClient.on('error', (err) => console.error('Redis error:', err));
 
-// TODO:
-//  Make scroll stay up the top upon response
-
+// Connect to Redis
+redisClient.connect().catch(console.error);
 
 // Initialize Ollama client
 const ollama = new Ollama({
     host: 'http://localhost:11434',
-    
 });
-// TODO:
-// Add a callback for chat API to end the conversation upon trigger
-// Allowing the user to stop a message if they mess up
-// 
+
 app.use(cors());
 app.use(server.static(path.join(__dirname, 'public')));
-app.use(server.json()); // Add this line to parse JSON bodies
+app.use(server.json());
 
 app.get('/', (req, res) => {
-    res.sendFile(path.join(__dirname, 'public','index.html'));
+    res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
-// TODO:
-// Delete or repurpose default route
+
+// Save chat session
+app.post('/API/saveChat', async (req, res) => {
+    const { chatId, messages } = req.body;
+    try {
+        await redisClient.set(chatId, JSON.stringify(messages));
+        res.json({ success: true });
+    } catch (error) {
+        console.error('Error saving chat:', error);
+        res.status(500).json({ error: 'Failed to save chat' });
+    }
+});
+
+// Load chat session
+app.get('/API/loadChat/:chatId', async (req, res) => {
+    const { chatId } = req.params;
+    try {
+        const messages = await redisClient.get(chatId);
+        res.json({ messages: JSON.parse(messages) });
+    } catch (error) {
+        console.error('Error loading chat:', error);
+        res.status(500).json({ error: 'Failed to load chat' });
+    }
+});
+
+// Chat routes
 app.post('/API/chat', async (req, res) => {
     try {
         const message = req.body.message;
@@ -49,8 +72,6 @@ app.post('/API/chat', async (req, res) => {
     }
 });
 
-// TODO
-// Add different routes for different models depending on what the users selection is
 app.post('/API/chat1.5b', async (req, res) => {
     try {
         const message = req.body.message;

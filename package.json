@@ -16,7 +16,7 @@
   "type": "commonjs",
   "main": "index.js",
   "scripts": {
-    "start": "node index.js"
+    "start": "echo \"MAKE SURE REDIS SERVER IS RUNNING!\" && node index.js"
   },
   "dependencies": {
     "cors": "^2.8.5",

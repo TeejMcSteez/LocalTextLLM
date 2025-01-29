@@ -4,6 +4,11 @@ const server = require('express');
 const cors = require('cors');
 const app = server();
 
+
+// TODO:
+//  Make scroll stay up the top upon response
+
+
 // Initialize Ollama client
 const ollama = new Ollama({
     host: 'http://localhost:11434',
@@ -27,8 +32,7 @@ app.post('/API/chat', async (req, res) => {
         const message = req.body.message;
         const response = await ollama.chat({
             model: 'deepseek-r1:1.5b',
-            // model: 'deepseek-r1:8b',
-            messages: [{
+             messages: [{
                 role: 'user',
                 content: message + " and if is math or code respond with markdown and LaTeX support for frontend compability you must do this.", 
                 format: 'json'

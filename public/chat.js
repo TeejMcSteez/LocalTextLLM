@@ -53,10 +53,10 @@ document.addEventListener('DOMContentLoaded', () => {
             chatDiv.appendChild(botDiv);
             
             // Trigger MathJax to process new content
-            MathJax.typesetPromise([botDiv]).catch((err) => console.log('MathJax error:', err));
+            await MathJax.typesetPromise([botDiv]);
             
-            // Auto scroll to bottom
-            chatDiv.scrollTop = chatDiv.scrollHeight;
+            // Smooth scroll to show new message
+            botDiv.scrollIntoView({ behavior: 'smooth', block: 'end' });
             messageInput.value = '';
             
             // Re-enable input

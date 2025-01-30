@@ -1,4 +1,7 @@
 document.addEventListener('DOMContentLoaded', () => {
+    /**
+     * All buttons, div elements, and messages array (need to use redis instead this is temporary)
+     */
     const chatDiv = document.getElementById('chat');
     const messageInput = document.getElementById('message');
     const sendButton = document.getElementById('send');
@@ -8,7 +11,21 @@ document.addEventListener('DOMContentLoaded', () => {
     const loadChatButton = document.getElementById('loadChat');
     let chatId = 'default';
     let messages = [];
-
+    /**
+     * Renders sent json content and user sent content with marked and markdown-it
+     * @param {String} role Role of the message sender
+     * @param {String} content Message for the role
+     */
+    function renderMessage(role, content) {
+        const msgDiv = document.createElement('div');
+        msgDiv.innerHTML = `<p><strong>${role}:</strong> ${content}</p>`;
+        chatDiv.appendChild(msgDiv);
+        MathJax.typesetPromise([msgDiv]);
+        msgDiv.scrollIntoView({ behavior: 'smooth', block: 'end' });
+    }
+    /**
+     * Saves chat to the redis server upon a sent message and successful response
+     */
     async function saveChat() {
         try {
             await fetch('http://localhost:3000/API/saveChat', {
@@ -22,7 +39,9 @@ document.addEventListener('DOMContentLoaded', () => {
             console.error('Error saving chat:', error);
         }
     }
-
+    /**
+     * Loads chat from redis server and displays saved chat
+     */
     async function loadChat() {
         try {
             const response = await fetch(`http://localhost:3000/API/loadChat/${chatId}`);
@@ -30,15 +49,16 @@ document.addEventListener('DOMContentLoaded', () => {
             messages = data.messages || [];
             chatDiv.innerHTML = '';
             messages.forEach(msg => {
-                const msgDiv = document.createElement('div');
-                msgDiv.innerHTML = `<p><strong>${msg.role}:</strong> ${msg.content}</p>`;
-                chatDiv.appendChild(msgDiv);
+                renderMessage(msg.role, msg.content);
             });
         } catch (error) {
             console.error('Error loading chat:', error);
         }
     }
-
+    /**
+     * Sends message to selected model also saves chat to messages upon completion
+     * @returns if there is no message to send
+     */
     async function sendMessage() {
         const message = messageInput.value.trim();
         const selectedParam = paramSelect.value;
@@ -49,9 +69,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         try {
             // Add user message immediately
-            const userDiv = document.createElement('div');
-            userDiv.innerHTML = `<p><strong>You:</strong> ${message}</p>`;
-            chatDiv.appendChild(userDiv);
+            renderMessage('user', message);
             messages.push({ role: 'user', content: message });
 
             // Show loading indicator
@@ -74,8 +92,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
             const data = await response.json();
 
-            const botDiv = document.createElement('div');
-            
             if (data.message === undefined) {
                 alert("Server is not running or model is not loaded try another one or come back later.");
             }
@@ -84,22 +100,10 @@ document.addEventListener('DOMContentLoaded', () => {
             loadingDiv.style.display = 'none';
 
             // Add bot response with Markdown and KaTeX support
-            if (window.markdownit && window.markdownitKatex) {
-                const md = window.markdownit().use(window.markdownitKatex);
-                const renderedMessage = md.render(data.message);
-                botDiv.innerHTML = `<p><strong>Bot:</strong> ${renderedMessage}</p>`;
-            } else {
-                botDiv.innerHTML = `<p><strong>Bot:</strong> ${data.message}</p>`;
-                console.error('Markdown-it or markdown-it-katex is not loaded');
-            }
-            chatDiv.appendChild(botDiv);
+            renderMessage('bot', data.message);
             messages.push({ role: 'bot', content: data.message });
 
-            // Trigger MathJax to process new content
-            await MathJax.typesetPromise([botDiv]);
-
             // Smooth scroll to show new message
-            botDiv.scrollIntoView({ behavior: 'smooth', block: 'end' });
             messageInput.value = '';
 
             // Re-enable input
@@ -121,13 +125,15 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    // Event listeners
+    /**
+     * Event listeners
+     */
     sendButton.addEventListener('click', sendMessage);
     messageInput.addEventListener('keypress', (e) => {
         if (e.key === 'Enter') sendMessage();
     });
     newChatButton.addEventListener('click', () => {
-        chatId = prompt('Enter new chat ID:');
+        chatId = prompt('Enter new chat ID (default is default):');
         messages = [];
         chatDiv.innerHTML = '';
     });

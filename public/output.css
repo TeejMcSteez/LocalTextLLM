@@ -1467,9 +1467,6 @@
   .bg-gray-600 {
     background-color: var(--color-gray-600);
   }
-  .bg-gray-800 {
-    background-color: var(--color-gray-800);
-  }
   .bg-red-500 {
     background-color: var(--color-red-500);
   }
@@ -1481,6 +1478,9 @@
   }
   .bg-red-700 {
     background-color: var(--color-red-700);
+  }
+  .bg-slate-700 {
+    background-color: var(--color-slate-700);
   }
   .-bg-conic {
     --tw-gradient-position: in oklab,;

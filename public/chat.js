@@ -61,6 +61,8 @@ document.addEventListener('DOMContentLoaded', () => {
             // Disable input while processing
             messageInput.disabled = true;
             sendButton.disabled = true;
+            newChatButton.disabled = true;
+            loadChatButton.disabled = true;
 
             const response = await fetch(`http://localhost:3000/API/chat${selectedParam}`, {
                 method: 'POST',
@@ -72,11 +74,16 @@ document.addEventListener('DOMContentLoaded', () => {
 
             const data = await response.json();
 
+            const botDiv = document.createElement('div');
+            
+            if (data.message === undefined) {
+                alert("Server is not running or model is not loaded try another one or come back later.");
+            }
+
             // Hide loading indicator
             loadingDiv.style.display = 'none';
 
             // Add bot response with Markdown and KaTeX support
-            const botDiv = document.createElement('div');
             if (window.markdownit && window.markdownitKatex) {
                 const md = window.markdownit().use(window.markdownitKatex);
                 const renderedMessage = md.render(data.message);
@@ -98,6 +105,8 @@ document.addEventListener('DOMContentLoaded', () => {
             // Re-enable input
             messageInput.disabled = false;
             sendButton.disabled = false;
+            newChatButton.disabled = false;
+            loadChatButton.disabled = false;
 
             // Save chat
             saveChat();
@@ -105,6 +114,8 @@ document.addEventListener('DOMContentLoaded', () => {
             loadingDiv.style.display = 'none';
             messageInput.disabled = false;
             sendButton.disabled = false;
+            newChatButton.disabled = false;
+            loadChatButton.disabled = false;
             console.error('Error:', error);
             alert('Failed to send message');
         }

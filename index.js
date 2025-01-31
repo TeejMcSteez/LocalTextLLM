@@ -138,6 +138,16 @@ app.post('/API/chat32b', async (req, res) => {
     }
 });
 
+app.get('/API/getAllChats', async (req, res) => {
+    try {
+        const keys = await redisClient.keys('*');
+        res.json({ chatIds: keys });
+    } catch (error) {
+        console.error('Error getting chat IDs:', error);
+        res.status(500).json({ error: 'Failed to get chat IDs' });
+    }
+});
+
 // 404 Handler
 app.use((req, res) => {
     res.status(404).json({"message": "file not found"});

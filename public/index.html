@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="scroll-smooth md:scroll-auto">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -24,8 +24,14 @@
 
   <div
     id="chat"
-    class="m-4 p-3 h-1/2 justify-center items-center place-items-center rounded border border-black overflow-y-auto text-black"
+    class="m-4 p-3 h-1/2 justify-center items-center place-items-center rounded border border-black border-dotted overflow-y-auto text-black"
   ></div>
+
+  <div 
+    id="chatIds" 
+    class="m-4 p-3 flex flex-wrap gap-4 bg-gray-800 rounded overflow-x-auto">
+    <h3 class="w-full text-white mb-2">Available Chats:</h3>
+  </div>
 
   <div id="loading" class="hidden my-2">
     <p class="animate-bounce">
@@ -50,7 +56,7 @@
     <option value="32b">32B</option>
   </select>
 
-  <div id="inputForm" class="flex justify-center">
+  <div id="inputForm" class="flex justify-center ">
     <input
       type="text"
       id="message"
@@ -65,15 +71,9 @@
     </button>
     <button
       id="newChat"
-      class="m-1 p-2 rounded bg-red-700 text-white hover:bg-gray-600 "
-    >
-      New Chat
-    </button>
-    <button
-      id="loadChat"
       class="m-1 p-2 rounded bg-red-700 text-white hover:bg-gray-600"
     >
-      Load Chat
+      New Chat
     </button>
   </div>
 

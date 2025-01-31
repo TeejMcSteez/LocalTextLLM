@@ -1,16 +1,14 @@
 document.addEventListener('DOMContentLoaded', () => {
-    /**
-     * All buttons, div elements, and messages array (need to use redis instead this is temporary)
-     */
     const chatDiv = document.getElementById('chat');
     const messageInput = document.getElementById('message');
     const sendButton = document.getElementById('send');
     const loadingDiv = document.getElementById('loading');
     const paramSelect = document.getElementById('paramSelect');
     const newChatButton = document.getElementById('newChat');
-    const loadChatButton = document.getElementById('loadChat');
+    const chatIdsDiv = document.getElementById('chatIds');
     let chatId = 'default';
     let messages = [];
+
     /**
      * Renders sent json content and user sent content with marked and markdown-it
      * @param {String} role Role of the message sender
@@ -23,6 +21,7 @@ document.addEventListener('DOMContentLoaded', () => {
         MathJax.typesetPromise([msgDiv]);
         msgDiv.scrollIntoView({ behavior: 'smooth', block: 'end' });
     }
+
     /**
      * Saves chat to the redis server upon a sent message and successful response
      */
@@ -35,10 +34,12 @@ document.addEventListener('DOMContentLoaded', () => {
                 },
                 body: JSON.stringify({ chatId, messages })
             });
+            displayChatIds(); // Refresh chat ID list after saving
         } catch (error) {
             console.error('Error saving chat:', error);
         }
     }
+
     /**
      * Loads chat from redis server and displays saved chat
      */
@@ -55,6 +56,30 @@ document.addEventListener('DOMContentLoaded', () => {
             console.error('Error loading chat:', error);
         }
     }
+
+    /**
+     * Fetches and displays all available chat IDs
+     */
+    async function displayChatIds() {
+        try {
+            const response = await fetch('http://localhost:3000/API/getAllChats');
+            const data = await response.json();
+            chatIdsDiv.innerHTML = '';
+            data.chatIds.forEach(id => {
+                const button = document.createElement('button');
+                button.textContent = id;
+                button.className = 'px-2 py-1 bg-red-700 text-white rounded hover:bg-gray-600';
+                button.onclick = () => {
+                    chatId = id;
+                    loadChat();
+                };
+                chatIdsDiv.appendChild(button);
+            });
+        } catch (error) {
+            console.error('Error fetching chat IDs:', error);
+        }
+    }
+
     /**
      * Sends message to selected model also saves chat to messages upon completion
      * @returns if there is no message to send
@@ -80,7 +105,6 @@ document.addEventListener('DOMContentLoaded', () => {
             messageInput.disabled = true;
             sendButton.disabled = true;
             newChatButton.disabled = true;
-            loadChatButton.disabled = true;
 
             const response = await fetch(`http://localhost:3000/API/chat${selectedParam}`, {
                 method: 'POST',
@@ -110,7 +134,6 @@ document.addEventListener('DOMContentLoaded', () => {
             messageInput.disabled = false;
             sendButton.disabled = false;
             newChatButton.disabled = false;
-            loadChatButton.disabled = false;
 
             // Save chat
             saveChat();
@@ -119,7 +142,6 @@ document.addEventListener('DOMContentLoaded', () => {
             messageInput.disabled = false;
             sendButton.disabled = false;
             newChatButton.disabled = false;
-            loadChatButton.disabled = false;
             console.error('Error:', error);
             alert('Failed to send message');
         }
@@ -136,9 +158,9 @@ document.addEventListener('DOMContentLoaded', () => {
         chatId = prompt('Enter new chat ID (default is default):');
         messages = [];
         chatDiv.innerHTML = '';
+        displayChatIds();
     });
-    loadChatButton.addEventListener('click', () => {
-        chatId = prompt('Enter chat ID to load (default is default):');
-        loadChat();
-    });
+
+    // Initial load of chat IDs
+    displayChatIds();
 });

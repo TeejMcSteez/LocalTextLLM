@@ -710,6 +710,9 @@
   .mt-5 {
     margin-top: calc(var(--spacing) * 5);
   }
+  .mb-2 {
+    margin-bottom: calc(var(--spacing) * 2);
+  }
   .ml-2 {
     margin-left: calc(var(--spacing) * 2);
   }
@@ -823,6 +826,9 @@
   }
   .w-4\/5 {
     width: calc(4/5 * 100%);
+  }
+  .w-full {
+    width: 100%;
   }
   .w-screen {
     width: 100vw;
@@ -1238,6 +1244,9 @@
   .justify-items-stretch {
     justify-items: stretch;
   }
+  .gap-4 {
+    gap: calc(var(--spacing) * 4);
+  }
   .space-y-reverse {
     :where(& > :not(:last-child)) {
       --tw-space-y-reverse: 1;
@@ -1322,6 +1331,9 @@
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
+  }
+  .overflow-x-auto {
+    overflow-x: auto;
   }
   .overflow-y-auto {
     overflow-y: auto;
@@ -1466,6 +1478,9 @@
   }
   .bg-gray-600 {
     background-color: var(--color-gray-600);
+  }
+  .bg-gray-800 {
+    background-color: var(--color-gray-800);
   }
   .bg-red-500 {
     background-color: var(--color-red-500);
@@ -1656,6 +1671,12 @@
   }
   .p-3 {
     padding: calc(var(--spacing) * 3);
+  }
+  .px-2 {
+    padding-inline: calc(var(--spacing) * 2);
+  }
+  .py-1 {
+    padding-block: calc(var(--spacing) * 1);
   }
   .text-center {
     text-align: center;
@@ -2234,6 +2255,11 @@
       @media (hover: hover) {
         background-color: var(--color-gray-600);
       }
+    }
+  }
+  .md\:scroll-auto {
+    @media (width >= 48rem) {
+      scroll-behavior: auto;
     }
   }
 }

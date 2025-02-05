@@ -16,14 +16,19 @@
   "type": "commonjs",
   "main": "index.js",
   "scripts": {
-    "start": "echo \"MAKE SURE REDIS SERVER IS RUNNING!\" && npx @tailwindcss/cli -i ./public/input.css -o ./public/output.css && node index.js"
+    "start": "echo \"MAKE SURE REDIS SERVER IS RUNNING!\" && bun x tailwindcss -i ./public/input.css -o ./public/output.css && node index.js"
   },
   "dependencies": {
-    "@tailwindcss/cli": "^4.0.1",
     "cors": "^2.8.5",
     "express": "^4.21.2",
     "ollama": "^0.5.12",
     "redis": "^4.7.0",
     "tailwindcss": "^4.0.1"
+  },
+  "devDependencies": {
+    "@types/bun": "latest"
+  },
+  "peerDependencies": {
+    "typescript": "^5.0.0"
   }
 }

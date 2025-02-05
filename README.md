@@ -11,3 +11,7 @@
 5. Display ChatID's for specific somewhere
 
 6. Add a way to group chat or tell the AI to make it readable instead of just a wall of text
+
+## Misc
+
+1. Turn of hover bg change so lets the user know that the buttons are off

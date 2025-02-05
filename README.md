@@ -15,3 +15,7 @@
 ## Misc
 
 1. Turn of hover bg change so lets the user know that the buttons are off
+
+2. Add clear chat and delete specific chat method
+
+3. Move chats to a tab? something to make it look better for large amounts of chats
